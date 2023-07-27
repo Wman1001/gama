@@ -45,6 +45,7 @@ def nsga2_select(
     Parent pairs may be repeated, but each parent pair consists of two unique parents.
     The population must be at least size 3 (otherwise it is trivial or impossible).
     """
+
     if len(population) < 3:
         raise ValueError("population must be at least size 3 for a pair to be selected")
 

@@ -19,6 +19,11 @@ def create_from_population(
     """Creates n new individuals based on the population."""
     offspring = []
     metrics = [lambda ind: ind.fitness.values[0], lambda ind: ind.fitness.values[1]]
+    len_pop = len(pop)
+
+    while len_pop < 3:
+        pop.append(operator_shell.mutate(random.choice(pop)))
+        len_pop += 1
     parent_pairs = nsga2_select(pop, n, metrics)
     for ind1, ind2 in parent_pairs:
         if random.random() < cxpb and len(_valid_crossover_functions(ind1, ind2)) > 0:
