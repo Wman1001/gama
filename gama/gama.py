@@ -213,6 +213,7 @@ class Gama(ABC):
         elif n_jobs == -1:
             n_jobs = multiprocessing.cpu_count()
             log.debug("n_jobs set to use all %d cores.", n_jobs)
+        self.n_jobs = n_jobs
 
         err = ""
         if max_total_time is None or max_total_time <= 0:
@@ -616,6 +617,12 @@ class Gama(ABC):
         if warm_start:
             if not all(isinstance(i, Individual) for i in warm_start):
                 raise TypeError("`warm_start` must be a list of Individual.")
+            if self.n_jobs > len(warm_start):
+                ws_length = len(warm_start)
+                while ws_length < self.n_jobs * 2:
+                    mutated_individual = self._operator_set.mutate(random.choice(warm_start))
+                    warm_start.append(mutated_individual)
+                    ws_length += 1
             pop = warm_start
         elif warm_start is None and len(self._final_pop) > 0:
             pop = self._final_pop
